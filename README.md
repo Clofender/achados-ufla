@@ -41,8 +41,8 @@ frontend React forem implementados.
 
 ## Integrantes
 
-- Pessoa 1: a definir;
-- Pessoa 2: a definir.
+- Pessoa 1: [Clofender (Daniel Silva Ferraz Neto)](https://github.com/Clofender);
+- Pessoa 2: [zector1 (José Víctor Miranda de Oliveira)](https://github.com/zector1).
 
 ## Escopo do Checkpoint 1
 
@@ -51,6 +51,3 @@ frontend React forem implementados.
 - tema personalizado do Django Admin;
 - filtros administrativos;
 - organização do repositório público.
-
-Documentos internos, o enunciado original e arquivos de planejamento local não
-fazem parte deste repositório.
