@@ -194,10 +194,3 @@ achados-ufla/
 As três entregas de finalização do Checkpoint 1 são feitas na branch `develop`.
 `main` reúne a versão estável, e as branches `feature/...` preservam o histórico
 das etapas de desenvolvimento.
-
-O enunciado do professor e os documentos internos de divisão de tarefas permanecem
-fora do repositório. Senhas, arquivos `.env`, banco SQLite, ambiente virtual,
-`node_modules/` e artefatos de build também são ignorados pelo Git.
-
-A configuração atual do Django usa `DEBUG=True` e é destinada ao desenvolvimento
-local; uma publicação do sistema exige configuração própria de produção.
