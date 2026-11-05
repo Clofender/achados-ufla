@@ -12,6 +12,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -80,3 +81,49 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Achados UFLA | Administração",
+    "site_header": "Achados UFLA",
+    "site_brand": "Achados UFLA",
+    "site_logo": "core/img/achados-ufla.svg",
+    "site_logo_classes": "",
+    "site_icon": "core/img/achados-ufla.svg",
+    "welcome_sign": "Administração de objetos perdidos e encontrados",
+    "copyright": "Achados UFLA",
+    "custom_css": "core/css/admin.css",
+    "use_google_fonts_cdn": False,
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "topmenu_links": [
+        {"name": "Início", "url": "admin:index"},
+        {"model": "core.Item"},
+        {"model": "occurrences.Occurrence"},
+    ],
+    "order_with_respect_to": [
+        "core",
+        "core.Item",
+        "core.Category",
+        "core.Location",
+        "occurrences",
+        "auth",
+    ],
+    "icons": {
+        "core": "fas fa-search",
+        "core.Item": "fas fa-box-open",
+        "core.Category": "fas fa-tags",
+        "core.Location": "fas fa-map-marker-alt",
+        "occurrences": "fas fa-clipboard-list",
+        "occurrences.Occurrence": "fas fa-clipboard-list",
+        "auth": "fas fa-users-cog",
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+    "default_theme_mode": "auto",
+    "brand_colour": "bg-success text-white",
+}

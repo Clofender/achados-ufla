@@ -1,0 +1,26 @@
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+    --bs-primary: #146c43;
+    --bs-primary-rgb: 20, 108, 67;
+    --bs-link-color: #198754;
+    --bs-link-color-rgb: 25, 135, 84;
+    --bs-link-hover-color: #157347;
+    --bs-link-hover-color-rgb: 21, 115, 71;
+}
+
+.btn-primary {
+    --bs-btn-bg: #146c43;
+    --bs-btn-border-color: #146c43;
+    --bs-btn-hover-bg: #105635;
+    --bs-btn-hover-border-color: #105635;
+    --bs-btn-active-bg: #105635;
+    --bs-btn-active-border-color: #105635;
+    --bs-btn-focus-shadow-rgb: 20, 108, 67;
+}
+
+.app-sidebar[data-bs-theme="dark"] {
+    --bs-secondary-bg-rgb: 18, 61, 48;
+    --lte-sidebar-menu-active-bg: #146c43;
+    --lte-sidebar-menu-active-color: #fff;
+}
