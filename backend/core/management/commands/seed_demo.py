@@ -50,8 +50,11 @@ class Command(BaseCommand):
                 content_type__app_label__in={"core", "occurrences"},
                 codename__in={
                     "view_category", "add_category", "change_category",
+                    "delete_category",
                     "view_location", "add_location", "change_location",
+                    "delete_location",
                     "view_item", "add_item", "change_item",
+                    "delete_item",
                     "view_occurrence", "add_occurrence", "change_occurrence",
                 },
             )

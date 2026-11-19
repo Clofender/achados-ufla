@@ -116,12 +116,20 @@ class ItemListView(LoginRequiredMixin, ListView):
             "statuses": Item.Status.choices,
             "result_count": self.get_queryset().count(),
         })
+        query = self.request.GET.copy()
+        query.pop("page", None)
+        context["pagination_query"] = query.urlencode()
         return context
 
 
 class ItemDetailView(LoginRequiredMixin, DetailView):
     template_name = "core/item_detail.html"
-    queryset = Item.objects.select_related("category", "location", "owner")
+
+    def get_queryset(self):
+        queryset = Item.objects.select_related("category", "location", "owner")
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(approved=True).exclude(status=Item.Status.ARCHIVED)
+        return queryset
 
 
 class OwnerRequiredMixin(UserPassesTestMixin):
