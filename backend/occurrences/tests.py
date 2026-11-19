@@ -64,3 +64,17 @@ class OccurrenceAppTests(TestCase):
         self.assertEqual(occurrence.status, Occurrence.Status.APPROVED)
         self.assertEqual(occurrence.reviewed_by, self.moderator)
         self.assertEqual(self.item.status, Item.Status.RETURNED)
+
+    def test_regular_user_cannot_approve_return(self):
+        occurrence = Occurrence.objects.create(
+            item=self.item,
+            occurrence_type=Occurrence.Type.RETURN_REQUEST,
+            reporter=self.user,
+            location=self.location,
+            occurred_at=timezone.now(),
+        )
+        self.client.force_login(self.user)
+        response = self.client.post(reverse("occurrences:approve_return", args=[occurrence.pk]))
+        self.assertEqual(response.status_code, 302)
+        occurrence.refresh_from_db()
+        self.assertEqual(occurrence.status, Occurrence.Status.PENDING)

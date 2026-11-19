@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="occurrence", name="status",
-            field=models.CharField(choices=[("PENDING", "Pendente"), ("APPROVED", "Aprovada"), ("REJECTED", "Rejeitada"), ("COMPLETED", "Concluída")], default="PENDING", max_length=10, verbose_name="status"),
+            field=models.CharField(choices=[("PENDING", "Pendente"), ("APPROVED", "Aprovada"), ("REJECTED", "Rejeitada"), ("COMPLETED", "Concluída")], default="PENDING", max_length=16, verbose_name="status"),
         ),
         migrations.AddField(
             model_name="occurrence", name="reviewed_by",

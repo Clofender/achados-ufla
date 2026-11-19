@@ -104,3 +104,41 @@ class DomainModelTests(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Item.objects.get(title="Mochila").owner, self.user)
+
+    def test_owner_cannot_edit_another_users_item(self):
+        other = get_user_model().objects.create_user(
+            username="outro",
+            password="Senha12345!",
+        )
+        item = Item.objects.create(
+            title="Carteira",
+            description="Carteira encontrada.",
+            category=self.category,
+            location=self.location,
+            owner=other,
+        )
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse("items:edit", args=[item.pk]),
+            {
+                "title": "Alterada",
+                "description": "Tentativa indevida.",
+                "category": self.category.pk,
+                "location": self.location.pk,
+                "status": Item.Status.FOUND,
+            },
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_public_search_filters_by_title(self):
+        Item.objects.create(
+            title="Caderno verde",
+            description="Anotações de aula.",
+            category=self.category,
+            location=self.location,
+            owner=self.user,
+        )
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("items:list"), {"q": "Caderno"})
+        self.assertContains(response, "Caderno verde")
+        self.assertNotContains(response, "Notebook")

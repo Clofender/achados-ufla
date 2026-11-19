@@ -122,6 +122,12 @@ Para ensaiar a apresentação: crie uma conta, cadastre um objeto encontrado,
 registre uma solicitação de devolução e aprove-a com `demo_moderador`. O
 dashboard mostrará o objeto como devolvido.
 
+## Capturas de tela
+
+As telas podem ser capturadas durante a execução local do portal em
+`http://127.0.0.1:8000/`. A sequência recomendada é: dashboard, catálogo com
+filtros, formulário de cadastro, detalhe da ocorrência e painel administrativo.
+
 ### Filtros e buscas disponíveis
 
 | Listagem | Filtros | Busca |

@@ -45,6 +45,17 @@ class Command(BaseCommand):
         moderator.user_permissions.add(
             Permission.objects.get(codename="change_occurrence", content_type__app_label="occurrences")
         )
+        moderator.user_permissions.add(
+            *Permission.objects.filter(
+                content_type__app_label__in={"core", "occurrences"},
+                codename__in={
+                    "view_category", "add_category", "change_category",
+                    "view_location", "add_location", "change_location",
+                    "view_item", "add_item", "change_item",
+                    "view_occurrence", "add_occurrence", "change_occurrence",
+                },
+            )
+        )
 
         administrator, administrator_created = user_model.objects.get_or_create(
             username="demo_admin",
@@ -100,6 +111,20 @@ class Command(BaseCommand):
                 "owner": reporter,
             },
         )
+        backpack, _ = Item.objects.get_or_create(
+            title="Mochila vermelha",
+            defaults={
+                "description": "Mochila devolvida ao estudante.",
+                "characteristics": "Chaveiro de folha no zíper.",
+                "status": Item.Status.RETURNED,
+                "category": electronics,
+                "location": library,
+                "owner": reporter,
+                "approved": True,
+                "approved_by": moderator,
+                "approved_at": timezone.now(),
+            },
+        )
 
         Occurrence.objects.get_or_create(
             item=phone,
@@ -119,6 +144,21 @@ class Command(BaseCommand):
             defaults={
                 "occurred_at": timezone.now(),
                 "notes": "Último local informado pelo estudante.",
+            },
+        )
+        Occurrence.objects.update_or_create(
+            item=backpack,
+            occurrence_type=Occurrence.Type.RETURN_REQUEST,
+            reporter=reporter,
+            defaults={
+                "location": library,
+                "occurred_at": timezone.now(),
+                "notes": "Devolução validada pela moderação.",
+                "status": Occurrence.Status.APPROVED,
+                "reviewed_by": moderator,
+                "reviewed_at": timezone.now(),
+                "returned_to": reporter,
+                "return_notes": "Entrega confirmada ao estudante.",
             },
         )
 

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -22,15 +24,20 @@ def dashboard(request):
         return redirect("accounts_login")
     user_items = Item.objects.filter(owner=request.user)
     user_occurrences = Occurrence.objects.filter(reporter=request.user)
+    visible_items = Item.objects.filter(is_public=True)
+    if not request.user.is_staff:
+        visible_items = visible_items.filter(approved=True).exclude(status=Item.Status.ARCHIVED)
     context = {
-        "total_items": Item.objects.filter(is_public=True).count(),
-        "found_items": Item.objects.filter(status=Item.Status.FOUND, is_public=True).count(),
-        "lost_items": Item.objects.filter(status=Item.Status.LOST, is_public=True).count(),
-        "returned_items": Item.objects.filter(status=Item.Status.RETURNED).count(),
-        "pending_items": Item.objects.filter(approved=False, is_public=True).count(),
+        "total_items": visible_items.count(),
+        "found_items": visible_items.filter(status=Item.Status.FOUND).count(),
+        "lost_items": visible_items.filter(status=Item.Status.LOST).count(),
+        "returned_items": visible_items.filter(status=Item.Status.RETURNED).count(),
+        "pending_items": Item.objects.filter(approved=False, is_public=True).count()
+        if request.user.is_staff
+        else user_items.filter(approved=False).count(),
         "my_items": user_items.count(),
         "my_occurrences": user_occurrences.count(),
-        "recent_items": Item.objects.filter(is_public=True).select_related("category", "location")[:5],
+        "recent_items": visible_items.select_related("category", "location")[:5],
         "recent_occurrences": user_occurrences.select_related("item")[:5],
     }
     return render(request, "core/dashboard.html", context)
@@ -81,6 +88,8 @@ class ItemListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = Item.objects.filter(is_public=True).select_related("category", "location")
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(approved=True).exclude(status=Item.Status.ARCHIVED)
         query = self.request.GET.get("q", "").strip()
         if query:
             queryset = queryset.filter(
@@ -89,9 +98,14 @@ class ItemListView(LoginRequiredMixin, ListView):
                 | Q(characteristics__icontains=query)
             )
         for field in ("category_id", "location_id", "status"):
-            value = self.request.GET.get(field)
+            value = self.request.GET.get(field) or self.request.GET.get(field.removesuffix("_id"))
             if value:
                 queryset = queryset.filter(**{field: value})
+        period = self.request.GET.get("period")
+        if period in {"7", "30", "365"}:
+            queryset = queryset.filter(
+                created_at__gte=timezone.now() - timedelta(days=int(period))
+            )
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -124,6 +138,11 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
     template_name = "core/item_form.html"
     success_url = reverse_lazy("items:mine")
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.owner = self.request.user
         form.instance.approved = False
@@ -136,6 +155,11 @@ class ItemUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     form_class = ItemForm
     template_name = "core/item_form.html"
     success_url = reverse_lazy("items:mine")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class ItemDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):

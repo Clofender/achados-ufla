@@ -78,6 +78,16 @@ class ProfileForm(forms.ModelForm):
 
 
 class ItemForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if not user or not user.is_staff:
+            self.fields["status"].choices = [
+                choice
+                for choice in self.fields["status"].choices
+                if choice[0] not in {Item.Status.RETURNED, Item.Status.ARCHIVED}
+            ]
+
     class Meta:
         model = Item
         fields = (

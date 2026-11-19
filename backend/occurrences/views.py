@@ -120,7 +120,17 @@ def approve_return(request, pk):
             occurrence.status = Occurrence.Status.APPROVED
             occurrence.reviewed_by = request.user
             occurrence.reviewed_at = timezone.now()
-            occurrence.save(update_fields=["status", "reviewed_by", "reviewed_at"])
+            occurrence.returned_to = occurrence.reporter
+            occurrence.return_notes = occurrence.notes
+            occurrence.save(
+                update_fields=[
+                    "status",
+                    "reviewed_by",
+                    "reviewed_at",
+                    "returned_to",
+                    "return_notes",
+                ]
+            )
             item = occurrence.item
             item.status = Item.Status.RETURNED
             item.approved = True

@@ -58,6 +58,15 @@ class Occurrence(models.Model):
         verbose_name="revisado por",
     )
     reviewed_at = models.DateTimeField("revisado em", null=True, blank=True)
+    returned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="received_items",
+        null=True,
+        blank=True,
+        verbose_name="devolvido para",
+    )
+    return_notes = models.TextField("observação da devolução", blank=True)
     created_at = models.DateTimeField("registrado em", auto_now_add=True)
 
     class Meta:

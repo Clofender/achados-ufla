@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib import messages
+from django.utils import timezone
 
 from .models import Category, Item, Location, Profile
 
@@ -31,6 +33,25 @@ class LocationAdmin(admin.ModelAdmin):
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
+    @admin.action(description="Arquivar objetos selecionados")
+    def archive_items(self, request, queryset):
+        updated = queryset.exclude(status=Item.Status.RETURNED).update(
+            status=Item.Status.ARCHIVED
+        )
+        self.message_user(request, f"{updated} objeto(s) arquivado(s).", messages.SUCCESS)
+
+    @admin.action(description="Marcar objetos selecionados como devolvidos")
+    def return_items(self, request, queryset):
+        valid = queryset.exclude(characteristics="")
+        updated = valid.update(
+            status=Item.Status.RETURNED,
+            approved=True,
+            approved_by=request.user,
+            approved_at=timezone.now(),
+        )
+        self.message_user(request, f"{updated} objeto(s) marcado(s) como devolvido(s).", messages.SUCCESS)
+
+    actions = ("archive_items", "return_items")
     list_display = ("title", "status", "category", "location", "owner", "created_at")
     search_fields = (
         "title",
