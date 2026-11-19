@@ -1,7 +1,100 @@
-{% extends "base.html" %}{% block title %}Dashboard | Achados UFLA{% endblock %}
-{% block content %}<div class="hero p-4 p-md-5 mb-4"><p class="eyebrow">Comunidade universitária</p><h1>Encontre o que importa.</h1><p class="lead">Registre perdas, compartilhe achados e ajude a devolver objetos à comunidade.</p><a class="btn btn-success" href="{% url 'items:create' %}">Cadastrar objeto</a></div>
-<div class="row g-3 mb-4">
-<div class="col-6 col-lg-3"><div class="stat-card"><span>Objetos públicos</span><strong>{{ total_items }}</strong></div></div><div class="col-6 col-lg-3"><div class="stat-card"><span>Achados</span><strong>{{ found_items }}</strong></div></div><div class="col-6 col-lg-3"><div class="stat-card"><span>Perdidos</span><strong>{{ lost_items }}</strong></div></div><div class="col-6 col-lg-3"><div class="stat-card"><span>Devolvidos</span><strong>{{ returned_items }}</strong></div></div></div>
-<div class="row g-3 mb-4"><div class="col-6 col-lg-3"><div class="stat-card"><span>Pendentes</span><strong>{{ pending_items }}</strong></div></div><div class="col-6 col-lg-3"><div class="stat-card"><span>Meus objetos</span><strong>{{ my_items }}</strong></div></div><div class="col-6 col-lg-3"><div class="stat-card"><span>Minhas ocorrências</span><strong>{{ my_occurrences }}</strong></div></div></div>
-<div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h4">Objetos recentes</h2><a href="{% url 'items:list' %}">Ver todos</a></div><div class="row g-3">{% for item in recent_items %}<div class="col-md-4"><div class="card h-100 p-3"><span class="badge text-bg-light align-self-start">{{ item.get_status_display }}</span><h3 class="h5 mt-2"><a class="text-decoration-none" href="{% url 'items:detail' item.pk %}">{{ item.title }}</a></h3><p class="text-muted mb-0">{{ item.location }} · {{ item.category }}</p></div></div>{% empty %}<p class="text-muted">Ainda não há objetos cadastrados.</p>{% endfor %}</div>
-<div class="d-flex justify-content-between align-items-center mt-5 mb-3"><h2 class="h4">Minhas últimas ocorrências</h2><a href="{% url 'occurrences:mine' %}">Ver todas</a></div><div class="list-group">{% for occurrence in recent_occurrences %}<a class="list-group-item list-group-item-action" href="{% url 'occurrences:detail' occurrence.pk %}">{{ occurrence.get_occurrence_type_display }} · {{ occurrence.item }} <span class="badge text-bg-light float-end">{{ occurrence.get_status_display }}</span></a>{% empty %}<p class="text-muted">Você ainda não registrou ocorrências.</p>{% endfor %}</div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Visão geral | Achados UFLA{% endblock %}
+{% block content %}
+<section class="welcome-card">
+  <div class="welcome-copy">
+    <p class="eyebrow">COMUNIDADE UNIVERSITÁRIA</p>
+    <h1>Olá, {{ user.first_name|default:user.username }}! <span aria-hidden="true">👋</span></h1>
+    <p class="welcome-description">Acompanhe os objetos do campus, consulte achados recentes e ajude algo importante a voltar para casa.</p>
+    <div class="welcome-actions">
+      <a class="button button-primary" href="{% url 'items:create' %}"><span aria-hidden="true">＋</span> Cadastrar objeto</a>
+      <a class="button button-secondary" href="{% url 'items:list' %}">Explorar objetos <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+  <div class="welcome-art" aria-hidden="true">⌕</div>
+</section>
+
+<section class="stats-grid" aria-label="Resumo atualizado do portal">
+  <article class="stat-card">
+    <span class="stat-icon">◇</span>
+    <div class="stat-copy"><span>Objetos públicos</span><strong>{{ total_items }}</strong></div>
+    <small class="stat-note">Disponíveis no catálogo</small>
+  </article>
+  <article class="stat-card">
+    <span class="stat-icon orange">⌕</span>
+    <div class="stat-copy"><span>Encontrados</span><strong>{{ found_items }}</strong></div>
+    <small class="stat-note">Aguardando seus donos</small>
+  </article>
+  <article class="stat-card">
+    <span class="stat-icon blue">◷</span>
+    <div class="stat-copy"><span>Perdidos</span><strong>{{ lost_items }}</strong></div>
+    <small class="stat-note">Ajude a comunidade a encontrar</small>
+  </article>
+  <article class="stat-card">
+    <span class="stat-icon purple">✓</span>
+    <div class="stat-copy"><span>Devolvidos</span><strong>{{ returned_items }}</strong></div>
+    <small class="stat-note positive">Uma boa história resolvida</small>
+  </article>
+</section>
+
+<section class="dashboard-grid">
+  <div class="panel">
+    <div class="panel-header">
+      <div><p class="panel-kicker">ATUALIZADOS RECENTEMENTE</p><h2>Objetos do campus</h2></div>
+      <a class="panel-link" href="{% url 'items:list' %}">Ver catálogo <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="recent-list">
+      {% for item in recent_items %}
+      <a class="recent-row" href="{% url 'items:detail' item.pk %}">
+        <span class="item-thumb">
+          {% if item.image %}<img src="{{ item.image.url }}" alt="">{% else %}<span aria-hidden="true">◇</span>{% endif %}
+        </span>
+        <span class="recent-info">
+          <strong>{{ item.title }}</strong>
+          <span>{{ item.category }} · {{ item.location }}</span>
+        </span>
+        <span class="recent-meta">
+          <span class="status status-{{ item.status|lower }}">{{ item.get_status_display }}</span>
+          <time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d/m H:i" }}</time>
+        </span>
+      </a>
+      {% empty %}
+      <div class="empty-state"><span class="empty-symbol" aria-hidden="true">◇</span><h2>Ainda não há objetos cadastrados</h2><p>Se perdeu ou encontrou algo, registre para ajudar a comunidade.</p><a class="button button-primary button-small" href="{% url 'items:create' %}">Cadastrar primeiro objeto</a></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <aside class="panel overview-panel">
+    <div class="panel-header"><div><p class="panel-kicker">SUA ATIVIDADE</p><h2>Um campus mais conectado</h2></div></div>
+    <div class="overview-chart {% if not has_chart_data %}is-empty{% endif %}" style="--found-share: {{ found_percent }}%; --lost-end: {{ lost_end_percent }}%;" aria-label="{{ returned_items }} objetos devolvidos">
+      <div class="overview-chart-copy"><strong>{{ returned_items }}</strong><span>devolvidos</span></div>
+    </div>
+    <div class="legend">
+      <div class="legend-row"><i class="legend-dot"></i><span>Encontrados</span><strong>{{ found_items }}</strong></div>
+      <div class="legend-row"><i class="legend-dot orange"></i><span>Perdidos</span><strong>{{ lost_items }}</strong></div>
+      <div class="legend-row"><i class="legend-dot blue"></i><span>Devolvidos</span><strong>{{ returned_items }}</strong></div>
+    </div>
+    <div class="quick-list">
+      <a class="quick-link" href="{% url 'items:mine' %}"><span>Meus objetos</span><span>{{ my_items }} →</span></a>
+      <a class="quick-link" href="{% url 'occurrences:mine' %}"><span>Minhas ocorrências</span><span>{{ my_occurrences }} →</span></a>
+      <a class="quick-link" href="{% url 'items:list' %}"><span>Explorar catálogo</span><span>→</span></a>
+    </div>
+  </aside>
+</section>
+
+<section class="section-heading">
+  <div><p class="panel-kicker">ACOMPANHAMENTO</p><h2>Minhas últimas ocorrências</h2></div>
+  <a class="panel-link" href="{% url 'occurrences:mine' %}">Ver todas <span aria-hidden="true">→</span></a>
+</section>
+<div class="record-list">
+  {% for occurrence in recent_occurrences %}
+  <a class="record-row" href="{% url 'occurrences:detail' occurrence.pk %}">
+    <span class="stat-icon blue" aria-hidden="true">◷</span>
+    <span class="record-main"><strong>{{ occurrence.get_occurrence_type_display }} · {{ occurrence.item.title }}</strong><small>{{ occurrence.location }} · {{ occurrence.occurred_at|date:"d/m/Y H:i" }}</small></span>
+    <span class="record-side"><span class="status status-{{ occurrence.status|lower }}">{{ occurrence.get_status_display }}</span><span aria-hidden="true">→</span></span>
+  </a>
+  {% empty %}
+  <div class="empty-state"><h2>Sem ocorrências por enquanto</h2><p>Quando registrar uma perda, um achado ou uma solicitação, ela aparecerá aqui.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

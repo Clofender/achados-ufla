@@ -1,2 +1,17 @@
-{% extends "base.html" %}{% block title %}Editar perfil | Achados UFLA{% endblock %}
-{% block content %}<h1>Editar perfil</h1><div class="card p-4"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-success">Salvar alterações</button> <a class="btn btn-link" href="{% url 'accounts_profile' %}">Cancelar</a></form></div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Editar perfil | Achados UFLA{% endblock %}
+{% block content %}
+<header class="page-heading">
+  <div><p class="eyebrow">SUA CONTA</p><h1>Editar perfil</h1><p>Mantenha suas informações atualizadas.</p></div>
+  <a class="button button-secondary" href="{% url 'accounts_profile' %}">Voltar ao perfil</a>
+</header>
+<section class="form-layout">
+  <div class="form-card">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">{% include "_form_fields.html" %}</div>
+      <div class="form-actions"><button class="button button-primary" type="submit">Salvar alterações</button><a class="button button-secondary" href="{% url 'accounts_profile' %}">Cancelar</a></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

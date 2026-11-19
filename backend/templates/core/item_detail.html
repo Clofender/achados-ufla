@@ -1,2 +1,28 @@
-{% extends "base.html" %}{% block title %}{{ object.title }} | Achados UFLA{% endblock %}
-{% block content %}<a href="{% url 'items:list' %}">← Voltar aos objetos</a><div class="card p-4 mt-3"><span class="badge text-bg-success align-self-start">{{ object.get_status_display }}</span><h1 class="mt-2">{{ object.title }}</h1><p class="lead">{{ object.description }}</p><p><strong>Características:</strong> {{ object.characteristics|default:"Não informadas" }}</p><p><strong>Local:</strong> {{ object.location }} · <strong>Categoria:</strong> {{ object.category }}</p><div class="mt-3">{% if object.status != "RETURNED" %}<a class="btn btn-success" href="{% url 'occurrences:create' %}?item={{ object.pk }}">Registrar ocorrência</a>{% endif %}{% if object.owner_id == user.id %}<a class="btn btn-outline-secondary" href="{% url 'items:edit' object.pk %}">Editar</a>{% endif %}</div></div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}{{ object.title }} | Achados UFLA{% endblock %}
+{% block content %}
+<p class="eyebrow"><a href="{% url 'items:list' %}">← Voltar ao catálogo</a></p>
+<section class="detail-layout">
+  <article class="detail-card">
+    {% if object.image %}<div class="detail-image"><img src="{{ object.image.url }}" alt="Foto de {{ object.title }}"></div>{% endif %}
+    <span class="status status-{{ object.status|lower }}">{{ object.get_status_display }}</span>
+    <h1>{{ object.title }}</h1>
+    <p class="detail-description">{{ object.description }}</p>
+    <div class="detail-facts">
+      <div class="detail-fact"><span>Categoria</span><strong>{{ object.category }}</strong></div>
+      <div class="detail-fact"><span>Local relacionado</span><strong>{{ object.location }}</strong></div>
+      <div class="detail-fact"><span>Características</span><strong>{{ object.characteristics|default:"Não informadas" }}</strong></div>
+      <div class="detail-fact"><span>Publicado em</span><strong>{{ object.created_at|date:"d/m/Y" }}</strong></div>
+    </div>
+  </article>
+  <aside class="detail-aside">
+    <p class="panel-kicker">PRÓXIMOS PASSOS</p><h2>Vamos ajudar esse objeto a voltar para casa.</h2>
+    <p>Se este objeto é seu ou você tem informações importantes, registre uma ocorrência para a equipe acompanhar.</p>
+    {% if object.status != "RETURNED" %}<a class="button button-primary" href="{% url 'occurrences:create' %}?item={{ object.pk }}">Registrar ocorrência</a>{% else %}<p class="notice notice-info">Este objeto já foi devolvido.</p>{% endif %}
+    {% if object.owner_id == user.id %}
+    <a class="button button-secondary" href="{% url 'items:edit' object.pk %}">Editar objeto</a>
+    <a class="button button-secondary" href="{% url 'items:delete' object.pk %}">Excluir objeto</a>
+    {% endif %}
+  </aside>
+</section>
+{% endblock %}

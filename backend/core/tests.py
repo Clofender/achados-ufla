@@ -88,6 +88,45 @@ class DomainModelTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/accounts/login/", response["Location"])
 
+    def test_dashboard_counts_visible_database_items(self):
+        self.client.force_login(self.user)
+        for status in (
+            Item.Status.FOUND,
+            Item.Status.LOST,
+            Item.Status.RETURNED,
+            Item.Status.ARCHIVED,
+        ):
+            Item.objects.create(
+                title=f"Objeto {status}",
+                description="Registro para a dashboard.",
+                characteristics="Detalhes do objeto",
+                status=status,
+                category=self.category,
+                location=self.location,
+                owner=self.user,
+                approved=True,
+                is_public=True,
+            )
+
+        response = self.client.get(reverse("dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["total_items"], 3)
+        self.assertEqual(response.context["found_items"], 1)
+        self.assertEqual(response.context["lost_items"], 1)
+        self.assertEqual(response.context["returned_items"], 1)
+        self.assertEqual(response.context["found_percent"], 33)
+        self.assertEqual(response.context["lost_end_percent"], 67)
+        self.assertContains(response, "--found-share: 33%; --lost-end: 67%;")
+
+    def test_dashboard_shows_empty_chart_without_items(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("dashboard"))
+
+        self.assertEqual(response.context["total_items"], 0)
+        self.assertContains(response, 'class="overview-chart is-empty"')
+
     def test_item_owner_is_set_by_server(self):
         self.client.force_login(self.user)
         response = self.client.post(

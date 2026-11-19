@@ -1,1 +1,10 @@
-{% extends "base.html" %}{% block content %}<h1>Excluir ocorrência?</h1><form method="post">{% csrf_token %}<button class="btn btn-danger">Confirmar exclusão</button> <a class="btn btn-link" href="{% url 'occurrences:detail' object.pk %}">Cancelar</a></form>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Excluir ocorrência | Achados UFLA{% endblock %}
+{% block content %}
+<section class="confirm-card">
+  <p class="eyebrow">CONFIRMAÇÃO</p>
+  <h1>Excluir este registro?</h1>
+  <p>O registro de {{ object.get_occurrence_type_display|lower }} sobre “{{ object.item.title }}” será removido permanentemente.</p>
+  <form method="post" class="confirm-actions">{% csrf_token %}<button class="button button-danger" type="submit">Excluir ocorrência</button><a class="button button-secondary" href="{% url 'occurrences:detail' object.pk %}">Manter registro</a></form>
+</section>
+{% endblock %}

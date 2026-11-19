@@ -1,2 +1,18 @@
-{% extends "base.html" %}{% block title %}Registrar ocorrência | Achados UFLA{% endblock %}
-{% block content %}<h1>Registrar ocorrência</h1><div class="card p-4"><p class="text-muted">O registro será analisado por um moderador antes de qualquer alteração administrativa.</p><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-success">Enviar registro</button></form></div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar ocorrência{% else %}Registrar ocorrência{% endif %} | Achados UFLA{% endblock %}
+{% block content %}
+<header class="page-heading">
+  <div><p class="eyebrow">ACOMPANHAMENTO</p><h1>{% if object %}Editar ocorrência{% else %}Registrar ocorrência{% endif %}</h1><p>Compartilhe as informações para que a equipe possa ajudar.</p></div>
+  <a class="button button-secondary" href="{% url 'occurrences:mine' %}">Cancelar</a>
+</header>
+<section class="form-layout">
+  <div class="form-card">
+    <p class="form-intro">O registro começa como pendente e será analisado. A equipe responsável atualizará o status após a verificação.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">{% include "_form_fields.html" %}</div>
+      <div class="form-actions"><button class="button button-primary" type="submit">Enviar para análise</button><a class="button button-secondary" href="{% url 'occurrences:mine' %}">Cancelar</a></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

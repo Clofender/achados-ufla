@@ -10,9 +10,10 @@ ambiente universitário. Projeto acadêmico da disciplina GAC116 — Programaç�
 
 ## Status e funcionalidades
 
-Em desenvolvimento — o portal público usa Django Templates e Bootstrap, com
-autenticação por sessão, perfis, catálogo de objetos, ocorrências e validação
-de devoluções. O Django Admin com Jazzmin continua disponível para a equipe.
+Em desenvolvimento — o portal público usa Django Templates, com autenticação
+por sessão, perfis, catálogo de objetos, ocorrências e validação de devoluções.
+A dashboard e todas as páginas do portal usam o mesmo tema e consultam o SQLite.
+O Django Admin com Jazzmin continua disponível para a equipe.
 
 Funcionalidades implementadas:
 
@@ -27,7 +28,7 @@ Funcionalidades implementadas:
 - cadastro e edição protegidos por proprietário;
 - solicitações de devolução com aprovação transacional;
 - comando para gerar dados fictícios de demonstração;
-- estrutura inicial do React com página de apresentação e link para o portal Django.
+- página auxiliar Vite que encaminha para o portal Django principal.
 
 O acesso ao Admin continua restrito a usuários com `is_staff` e permissões.
 
@@ -36,7 +37,7 @@ O acesso ao Admin continua restrito a usuários com `is_staff` e permissões.
 - Python 3.12 e Django 5.2;
 - SQLite como banco de dados relacional;
 - Jazzmin 3.0.5, com Bootstrap no ambiente administrativo;
-- React 19 e Vite 8 no frontend;
+- React 19 e Vite 8 como página auxiliar de redirecionamento;
 - Git e GitHub.
 
 ## Requisitos
@@ -141,9 +142,20 @@ Objetos e ocorrências também possuem navegação por ano, mês e dia. Os formu
 de objetos oferecem autocomplete de categoria e local; os de ocorrências, de
 objeto, local e responsável.
 
-## Instalação e execução do frontend
+## Acesso ao portal
 
-Em outro terminal, a partir da raiz do repositório:
+O portal completo, incluindo dashboard, autenticação, catálogo e formulários,
+é servido pelo Django e usa o banco SQLite. Inicie apenas o backend:
+
+```powershell
+.\.venv\Scripts\python.exe backend/manage.py runserver
+```
+
+Abra [http://127.0.0.1:8000/](http://127.0.0.1:8000/). O Vite em
+`http://127.0.0.1:5173/` é opcional e apenas encaminha para o portal; não é uma
+interface separada nem mantém dados próprios.
+
+Para usar essa página auxiliar, instale e inicie o Vite em outro terminal:
 
 ```powershell
 cd frontend
@@ -151,14 +163,10 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço exibido pelo Vite, normalmente
-[http://localhost:5173/](http://localhost:5173/). O link da página inicial aponta
-para o Admin em `http://127.0.0.1:8000/admin/`; mantenha o backend em execução
-para acessá-lo. Os dois servidores funcionam separadamente.
-
 Se o PowerShell bloquear `npm.ps1`, use `npm.cmd` no lugar de `npm`.
+O banco, login e operações de objetos continuam centralizados no Django.
 
-Para gerar e conferir a versão compilada, dentro de `frontend/`:
+Para validar a página auxiliar:
 
 ```powershell
 npm run build

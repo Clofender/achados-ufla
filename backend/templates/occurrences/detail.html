@@ -1,2 +1,38 @@
-{% extends "base.html" %}{% block title %}Ocorrência | Achados UFLA{% endblock %}
-{% block content %}<a href="{% url 'occurrences:mine' %}">← Minhas ocorrências</a><div class="card p-4 mt-3"><span class="badge text-bg-light align-self-start">{{ object.get_status_display }}</span><h1 class="mt-2">{{ object.get_occurrence_type_display }}</h1><p><strong>Objeto:</strong> {{ object.item }}</p><p><strong>Local:</strong> {{ object.location }}</p><p><strong>Quando:</strong> {{ object.occurred_at|date:"d/m/Y H:i" }}</p><p>{{ object.notes }}</p>{% if object.returned_to %}<p><strong>Devolvido para:</strong> {{ object.returned_to.get_full_name|default:object.returned_to.username }}</p><p><strong>Observação da devolução:</strong> {{ object.return_notes }}</p>{% endif %}{% if object.status == "PENDING" %}<a class="btn btn-outline-secondary" href="{% url 'occurrences:edit' object.pk %}">Editar</a><a class="btn btn-outline-danger" href="{% url 'occurrences:delete' object.pk %}">Excluir</a>{% endif %}{% if can_review and object.occurrence_type == "RETURN_REQUEST" and object.status == "PENDING" %}<form class="d-inline" method="post" action="{% url 'occurrences:approve_return' object.pk %}">{% csrf_token %}<button class="btn btn-success">Aprovar devolução</button></form>{% endif %}</div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Ocorrência | Achados UFLA{% endblock %}
+{% block content %}
+<p class="eyebrow"><a href="{% url 'occurrences:mine' %}">← Voltar às minhas ocorrências</a></p>
+<section class="detail-layout">
+  <article class="detail-card">
+    <p class="panel-kicker">REGISTRO DE {{ object.get_occurrence_type_display|upper }}</p>
+    <span class="status status-{{ object.status|lower }}">{{ object.get_status_display }}</span>
+    <h1>{{ object.item.title }}</h1>
+    <p class="detail-description">{{ object.notes|default:"Nenhuma observação adicional foi informada." }}</p>
+    <div class="detail-facts">
+      <div class="detail-fact"><span>Objeto</span><strong>{{ object.item.title }}</strong></div>
+      <div class="detail-fact"><span>Local da ocorrência</span><strong>{{ object.location }}</strong></div>
+      <div class="detail-fact"><span>Data e hora</span><strong>{{ object.occurred_at|date:"d/m/Y H:i" }}</strong></div>
+      <div class="detail-fact"><span>Enviado em</span><strong>{{ object.created_at|date:"d/m/Y H:i" }}</strong></div>
+    </div>
+    {% if object.returned_to %}
+    <div class="form-divider">Devolução confirmada</div>
+    <p><strong>Devolvido para:</strong> {{ object.returned_to.get_full_name|default:object.returned_to.username }}</p>
+    {% if object.return_notes %}<p class="detail-description">{{ object.return_notes }}</p>{% endif %}
+    {% endif %}
+  </article>
+  <aside class="detail-aside">
+    <p class="panel-kicker">PRÓXIMA ETAPA</p><h2>O status do seu registro</h2>
+    <div class="activity-timeline">
+      <div class="timeline-row"><strong>{{ object.get_status_display }}</strong><span>{% if object.reviewed_at %}Atualizado em {{ object.reviewed_at|date:"d/m/Y H:i" }}{% else %}A equipe ainda está analisando as informações.{% endif %}</span></div>
+      {% if object.reviewed_by %}<div class="timeline-row"><strong>Analisado pela equipe</strong><span>{{ object.reviewed_by.get_full_name|default:object.reviewed_by.username }}</span></div>{% endif %}
+    </div>
+    {% if object.status == "PENDING" %}
+    <a class="button button-secondary" href="{% url 'occurrences:edit' object.pk %}">Editar registro</a>
+    <a class="button button-secondary" href="{% url 'occurrences:delete' object.pk %}">Excluir registro</a>
+    {% endif %}
+    {% if can_review and object.occurrence_type == "RETURN_REQUEST" and object.status == "PENDING" %}
+    <form method="post" action="{% url 'occurrences:approve_return' object.pk %}">{% csrf_token %}<button class="button button-primary" type="submit">Aprovar devolução</button></form>
+    {% endif %}
+  </aside>
+</section>
+{% endblock %}

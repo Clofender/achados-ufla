@@ -27,11 +27,19 @@ def dashboard(request):
     visible_items = Item.objects.filter(is_public=True)
     if not request.user.is_staff:
         visible_items = visible_items.filter(approved=True).exclude(status=Item.Status.ARCHIVED)
+    total_items = visible_items.count()
+    found_items = visible_items.filter(status=Item.Status.FOUND).count()
+    lost_items = visible_items.filter(status=Item.Status.LOST).count()
+    returned_items = visible_items.filter(status=Item.Status.RETURNED).count()
+    chart_total = total_items or 1
     context = {
-        "total_items": visible_items.count(),
-        "found_items": visible_items.filter(status=Item.Status.FOUND).count(),
-        "lost_items": visible_items.filter(status=Item.Status.LOST).count(),
-        "returned_items": visible_items.filter(status=Item.Status.RETURNED).count(),
+        "total_items": total_items,
+        "found_items": found_items,
+        "lost_items": lost_items,
+        "returned_items": returned_items,
+        "has_chart_data": total_items > 0,
+        "found_percent": round(found_items * 100 / chart_total),
+        "lost_end_percent": round((found_items + lost_items) * 100 / chart_total),
         "pending_items": Item.objects.filter(approved=False, is_public=True).count()
         if request.user.is_staff
         else user_items.filter(approved=False).count(),

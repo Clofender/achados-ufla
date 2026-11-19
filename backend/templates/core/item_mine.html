@@ -1,2 +1,19 @@
-{% extends "base.html" %}{% block title %}Meus objetos | Achados UFLA{% endblock %}
-{% block content %}<h1>Meus objetos</h1><div class="list-group">{% for item in items %}<a class="list-group-item list-group-item-action" href="{% url 'items:detail' item.pk %}"><strong>{{ item.title }}</strong> · {{ item.get_status_display }} <span class="text-muted float-end">{% if item.approved %}Aprovado{% else %}Em análise{% endif %}</span></a>{% empty %}<p>Você ainda não cadastrou objetos.</p>{% endfor %}</div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Meus objetos | Achados UFLA{% endblock %}
+{% block content %}
+<header class="page-heading">
+  <div><p class="eyebrow">SEUS REGISTROS</p><h1>Meus objetos</h1><p>Acompanhe os objetos que você cadastrou e o estado de cada publicação.</p></div>
+  <a class="button button-primary" href="{% url 'items:create' %}"><span aria-hidden="true">＋</span> Novo objeto</a>
+</header>
+<div class="record-list">
+  {% for item in items %}
+  <a class="record-row" href="{% url 'items:detail' item.pk %}">
+    <span class="item-thumb">{% if item.image %}<img src="{{ item.image.url }}" alt="">{% else %}<span aria-hidden="true">◇</span>{% endif %}</span>
+    <span class="record-main"><strong>{{ item.title }}</strong><small>{{ item.category }} · {{ item.location }} · {{ item.created_at|date:"d/m/Y" }}</small></span>
+    <span class="record-side"><span class="status status-{{ item.status|lower }}">{{ item.get_status_display }}</span><span class="status {% if item.approved %}status-approved{% else %}status-pending{% endif %}">{% if item.approved %}Aprovado{% else %}Em análise{% endif %}</span></span>
+  </a>
+  {% empty %}
+  <div class="empty-state"><span class="empty-symbol" aria-hidden="true">◇</span><h2>Você ainda não cadastrou objetos</h2><p>Registre um objeto perdido ou encontrado para acompanhar as atualizações por aqui.</p><a class="button button-primary button-small" href="{% url 'items:create' %}">Cadastrar primeiro objeto</a></div>
+  {% endfor %}
+</div>
+{% endblock %}

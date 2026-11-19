@@ -1,2 +1,18 @@
-{% extends "base.html" %}{% block title %}Objeto | Achados UFLA{% endblock %}
-{% block content %}<h1>{% if object %}Editar objeto{% else %}Cadastrar objeto{% endif %}</h1><div class="card p-4"><form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button class="btn btn-success">Salvar objeto</button></form></div>{% endblock %}
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar objeto{% else %}Cadastrar objeto{% endif %} | Achados UFLA{% endblock %}
+{% block content %}
+<header class="page-heading">
+  <div><p class="eyebrow">CATÁLOGO DA COMUNIDADE</p><h1>{% if object %}Editar objeto{% else %}Cadastrar objeto{% endif %}</h1><p>Conte os detalhes para ajudar a comunidade a reconhecer o objeto.</p></div>
+  <a class="button button-secondary" href="{% if object %}{% url 'items:detail' object.pk %}{% else %}{% url 'items:list' %}{% endif %}">Cancelar</a>
+</header>
+<section class="form-layout">
+  <div class="form-card">
+    <p class="form-intro">Os campos com validação ajudam a manter o catálogo organizado. Novos cadastros podem aguardar aprovação antes de ficarem visíveis.</p>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-grid">{% include "_form_fields.html" %}</div>
+      <div class="form-actions"><button class="button button-primary" type="submit">Salvar objeto</button><a class="button button-secondary" href="{% if object %}{% url 'items:detail' object.pk %}{% else %}{% url 'items:list' %}{% endif %}">Cancelar</a></div>
+    </form>
+  </div>
+</section>
+{% endblock %}
