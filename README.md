@@ -10,9 +10,9 @@ ambiente universitário. Projeto acadêmico da disciplina GAC116 — Programaç�
 
 ## Status e funcionalidades
 
-Em desenvolvimento — Checkpoint 1. O gerenciamento dos dados funciona pelo
-Django Admin, com autenticação, tema Jazzmin, identidade visual do Achados UFLA
-e modo claro/escuro conforme a preferência do sistema.
+Em desenvolvimento — o portal público usa Django Templates e Bootstrap, com
+autenticação por sessão, perfis, catálogo de objetos, ocorrências e validação
+de devoluções. O Django Admin com Jazzmin continua disponível para a equipe.
 
 Funcionalidades implementadas:
 
@@ -21,12 +21,15 @@ Funcionalidades implementadas:
 - ocorrências de perda ou achado relacionadas a objeto, local e usuário responsável;
 - buscas, filtros, navegação por datas e campos com autocomplete no Admin;
 - validação de datas de ocorrências e das características de objetos devolvidos;
+- dashboard com totais e registros recentes vindos do banco;
+- cadastro, login, perfil e logout de usuários;
+- catálogo com busca, filtros e paginação;
+- cadastro e edição protegidos por proprietário;
+- solicitações de devolução com aprovação transacional;
 - comando para gerar dados fictícios de demonstração;
-- estrutura inicial do React com página de apresentação e link para o Admin local.
+- estrutura inicial do React com página de apresentação e link para o portal Django.
 
-O frontend ainda não consulta o banco nem possui cadastro público, login de
-usuários finais ou fluxo de devolução. Essas funcionalidades ficam para a próxima
-etapa. O acesso atual ao Admin é destinado a usuários com permissão administrativa.
+O acesso ao Admin continua restrito a usuários com `is_staff` e permissões.
 
 ## Tecnologias
 
@@ -85,25 +88,45 @@ A partir da raiz do repositório:
 .\.venv\Scripts\python.exe backend/manage.py runserver
 ```
 
-Abra [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) e entre com o
-superusuário criado. A rota `/` não possui página Django nesta etapa.
+Abra [http://127.0.0.1:8000/](http://127.0.0.1:8000/) para o portal ou
+[http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) para a administração.
 
 O superusuário pode administrar todos os modelos. Outros usuários precisam ter
 `is_staff` habilitado e as permissões correspondentes, atribuídas no Admin.
 
 ### Dados de demonstração
 
-Em outro terminal, na raiz do repositório, substitua `seu_usuario` pelo nome do
-superusuário existente:
+O comando cria contas locais, categorias, locais, objetos e ocorrências:
 
 ```powershell
-.\.venv\Scripts\python.exe backend/manage.py seed_demo --username seu_usuario
+.\.venv\Scripts\python.exe backend/manage.py seed_demo
 ```
 
-O comando cria duas categorias, dois locais, dois objetos e duas ocorrências
-fictícias. Esses dados permitem demonstrar perda/achado, categorias, locais e
-buscas. Para demonstrar filtros por períodos diferentes, cadastre ocorrências
-com datas passadas distintas pelo Admin.
+As contas `demo_aluno`, `demo_moderador` e `demo_admin` usam a senha local
+`Demo12345!`. Para usar um usuário existente como proprietário, informe
+`--username seu_usuario`. Nunca use as credenciais de demonstração em produção.
+
+## Permissões, segurança e fluxo de demonstração
+
+Cada usuário possui um `Profile` com telefone, matrícula e papel
+(`student`, `moderator` ou `admin`). Usuários comuns só editam seus próprios
+objetos e ocorrências. Moderadores e administradores validam ocorrências; a
+aprovação de devolução atualiza a ocorrência e o objeto dentro de uma transação.
+O proprietário de um objeto é atribuído no servidor, nunca pelo formulário.
+
+Uploads são validados por extensão e tamanho (até 5 MB) e armazenados em
+`MEDIA_ROOT`. Em produção, configure `DJANGO_SECRET_KEY`, `ALLOWED_HOSTS`,
+HTTPS e um armazenamento de mídia apropriado.
+
+Para ensaiar a apresentação: crie uma conta, cadastre um objeto encontrado,
+registre uma solicitação de devolução e aprove-a com `demo_moderador`. O
+dashboard mostrará o objeto como devolvido.
+
+## Capturas de tela
+
+As telas podem ser capturadas durante a execução local do portal em
+`http://127.0.0.1:8000/`. A sequência recomendada é: dashboard, catálogo com
+filtros, formulário de cadastro, detalhe da ocorrência e painel administrativo.
 
 ### Filtros e buscas disponíveis
 

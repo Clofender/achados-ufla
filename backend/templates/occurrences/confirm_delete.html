@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<h1>Excluir ocorrência?</h1><form method="post">{% csrf_token %}<button class="btn btn-danger">Confirmar exclusão</button> <a class="btn btn-link" href="{% url 'occurrences:detail' object.pk %}">Cancelar</a></form>{% endblock %}

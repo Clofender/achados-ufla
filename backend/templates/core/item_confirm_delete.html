@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<h1>Excluir objeto?</h1><p>Esta ação também remove as ocorrências relacionadas.</p><form method="post">{% csrf_token %}<button class="btn btn-danger">Confirmar exclusão</button> <a class="btn btn-link" href="{% url 'items:detail' object.pk %}">Cancelar</a></form>{% endblock %}

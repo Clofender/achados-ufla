@@ -91,16 +91,16 @@ export default function App() {
             <Icon name="grid" />
             <span>Visão geral</span>
           </a>
-          <a className="nav-item" href="#items">
+          <a className="nav-item" href="http://127.0.0.1:8000/items/">
             <Icon name="box" />
             <span>Objetos</span>
             <b>12</b>
           </a>
-          <a className="nav-item" href="#found">
+          <a className="nav-item" href="http://127.0.0.1:8000/items/?status=found">
             <Icon name="compass" />
             <span>Encontrados</span>
           </a>
-          <a className="nav-item" href="#profile">
+          <a className="nav-item" href="http://127.0.0.1:8000/accounts/profile/">
             <Icon name="user" />
             <span>Meu perfil</span>
           </a>
@@ -111,7 +111,7 @@ export default function App() {
             <Icon name={theme === 'light' ? 'moon' : 'sun'} />
             <span>{theme === 'light' ? 'Modo escuro' : 'Modo claro'}</span>
           </button>
-          <a className="logout-link" href="http://127.0.0.1:8000/admin/logout/">
+          <a className="logout-link" href="http://127.0.0.1:8000/accounts/logout/">
             <Icon name="logout" />
             <span>Sair</span>
           </a>
@@ -127,17 +127,18 @@ export default function App() {
             <span />
             <span />
           </button>
-          <div className="search-box">
+          <form className="search-box" action="http://127.0.0.1:8000/items/" method="get">
             <Icon name="search" size={19} />
             <input
               aria-label="Pesquisar objetos"
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Pesquisar objetos ou locais..."
+              name="q"
               type="search"
               value={query}
             />
             <kbd>⌘ K</kbd>
-          </div>
+          </form>
           <button className="notification-button" type="button" aria-label="Notificações">
             <Icon name="bell" size={20} />
             <span />
@@ -158,7 +159,7 @@ export default function App() {
               <h1>Bom dia, José! <span>👋</span></h1>
               <p>Veja o que aconteceu com os objetos da comunidade.</p>
             </div>
-            <a className="primary-button" href="http://127.0.0.1:8000/admin/core/item/add/">
+            <a className="primary-button" href="http://127.0.0.1:8000/items/create/">
               <Icon name="plus" size={18} />
               Cadastrar objeto
             </a>
@@ -206,7 +207,7 @@ export default function App() {
                   <p className="panel-kicker">ATIVIDADE RECENTE</p>
                   <h2>Objetos atualizados</h2>
                 </div>
-                <a href="http://127.0.0.1:8000/admin/core/item/">Ver todos <Icon name="arrow" size={16} /></a>
+                <a href="http://127.0.0.1:8000/items/">Ver todos <Icon name="arrow" size={16} /></a>
               </div>
 
               <div className="filter-row" role="group" aria-label="Filtrar objetos">
@@ -271,7 +272,7 @@ export default function App() {
                 <div><i className="orange-dot" /><span>Perdidos</span><strong>4</strong></div>
                 <div><i className="blue-dot" /><span>Devolvidos</span><strong>7</strong></div>
               </div>
-              <a className="admin-link" href="http://127.0.0.1:8000/admin/">Abrir painel administrativo</a>
+              <a className="admin-link" href="http://127.0.0.1:8000/">Abrir portal</a>
             </aside>
           </section>
         </section>

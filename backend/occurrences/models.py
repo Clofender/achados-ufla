@@ -10,6 +10,13 @@ class Occurrence(models.Model):
     class Type(models.TextChoices):
         LOSS = "LOSS", "Perda"
         FINDING = "FINDING", "Achado"
+        RETURN_REQUEST = "RETURN_REQUEST", "Solicitação de devolução"
+
+    class Status(models.TextChoices):
+        PENDING = "PENDING", "Pendente"
+        APPROVED = "APPROVED", "Aprovada"
+        REJECTED = "REJECTED", "Rejeitada"
+        COMPLETED = "COMPLETED", "Concluída"
 
     item = models.ForeignKey(
         Item,
@@ -19,7 +26,7 @@ class Occurrence(models.Model):
     )
     occurrence_type = models.CharField(
         "tipo",
-        max_length=7,
+        max_length=16,
         choices=Type.choices,
     )
     reporter = models.ForeignKey(
@@ -36,6 +43,30 @@ class Occurrence(models.Model):
     )
     occurred_at = models.DateTimeField("data e hora da ocorrência")
     notes = models.TextField("observações", blank=True)
+    status = models.CharField(
+        "status",
+        max_length=16,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="reviewed_occurrences",
+        null=True,
+        blank=True,
+        verbose_name="revisado por",
+    )
+    reviewed_at = models.DateTimeField("revisado em", null=True, blank=True)
+    returned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="received_items",
+        null=True,
+        blank=True,
+        verbose_name="devolvido para",
+    )
+    return_notes = models.TextField("observação da devolução", blank=True)
     created_at = models.DateTimeField("registrado em", auto_now_add=True)
 
     class Meta:

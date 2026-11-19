@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Achados UFLA{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{% static 'core/css/site.css' %}" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg border-bottom bg-body">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-success" href="{% url 'dashboard' %}">Achados UFLA</a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">☰</button>
+    <div id="nav" class="collapse navbar-collapse">
+      <div class="navbar-nav me-auto">
+        {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'items:list' %}">Objetos</a>
+        <a class="nav-link" href="{% url 'occurrences:mine' %}">Minhas ocorrências</a>
+        {% endif %}
+      </div>
+      <div class="navbar-nav">
+      {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'accounts_profile' %}">{{ user.get_short_name|default:user.username }}</a>
+        <form method="post" action="{% url 'accounts_logout' %}" class="d-inline">
+          {% csrf_token %}<button class="btn btn-link nav-link">Sair</button>
+        </form>
+      {% else %}
+        <a class="nav-link" href="{% url 'accounts_login' %}">Entrar</a>
+        <a class="btn btn-success btn-sm align-self-center" href="{% url 'accounts_register' %}">Criar conta</a>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+<main class="container py-4">
+{% for message in messages %}<div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
