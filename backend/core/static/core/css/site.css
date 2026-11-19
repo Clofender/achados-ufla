@@ -1,0 +1,13 @@
+:root { --brand: #146c43; --ink: #18372c; }
+body { background: #f5f8f6; color: var(--ink); }
+.hero { border-radius: 1.25rem; background: linear-gradient(120deg, #e1f1e7, #fff); }
+.hero h1 { max-width: 34rem; font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 750; }
+.eyebrow { color: var(--brand); font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.stat-card, .card, .auth-card { border: 0; border-radius: 1rem; background: #fff; box-shadow: 0 .5rem 1.5rem rgba(24,55,44,.07); }
+.stat-card { padding: 1.25rem; } .stat-card span { display: block; color: #64746b; font-size: .85rem; } .stat-card strong { display: block; margin-top: .35rem; font-size: 2rem; }
+.auth-card { max-width: 34rem; padding: 2rem; }
+.empty-state { padding: 3rem; text-align: center; border: 1px dashed #b6c8bd; border-radius: 1rem; }
+a { color: var(--brand); } a:hover { color: #0e4e30; }
+@media (prefers-color-scheme: dark) {
+  body { background: #10231b; color: #e3eee8; } .card, .auth-card { background: #193228; color: #e3eee8; } .hero { background: linear-gradient(120deg, #193b2b, #193228); } .text-muted { color: #abc0b3 !important; }
+}
