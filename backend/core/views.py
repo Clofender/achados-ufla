@@ -150,4 +150,3 @@ class MyItemListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Item.objects.filter(owner=self.request.user).select_related("category", "location")
-

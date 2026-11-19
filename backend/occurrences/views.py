@@ -129,4 +129,3 @@ def approve_return(request, pk):
             item.save(update_fields=["status", "approved", "approved_by", "approved_at", "updated_at"])
             messages.success(request, "Solicitação aprovada e objeto marcado como devolvido.")
     return redirect("occurrences:detail", pk=pk)
-

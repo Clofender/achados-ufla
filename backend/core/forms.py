@@ -92,4 +92,3 @@ class ItemForm(forms.ModelForm):
             "is_public",
         )
         widgets = {"description": forms.Textarea(attrs={"rows": 4})}
-
