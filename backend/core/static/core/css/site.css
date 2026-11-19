@@ -6,6 +6,13 @@ body { background: #f5f8f6; color: var(--ink); }
 .stat-card, .card, .auth-card { border: 0; border-radius: 1rem; background: #fff; box-shadow: 0 .5rem 1.5rem rgba(24,55,44,.07); }
 .stat-card { padding: 1.25rem; } .stat-card span { display: block; color: #64746b; font-size: .85rem; } .stat-card strong { display: block; margin-top: .35rem; font-size: 2rem; }
 .auth-card { max-width: 34rem; padding: 2rem; }
+.auth-shell { min-height: calc(100vh - 9rem); display: grid; place-items: center; padding: 2rem 0; }
+.auth-shell .auth-card { width: min(100%, 34rem); }
+.auth-card h1 { margin-bottom: .5rem; }
+.auth-card form p { margin-bottom: 1rem; }
+.auth-card form label { display: block; margin-bottom: .35rem; font-weight: 600; }
+.auth-card form input { width: 100%; padding: .65rem .75rem; border: 1px solid #c9d7ce; border-radius: .5rem; }
+.auth-card form input:focus { border-color: var(--brand); box-shadow: 0 0 0 .2rem rgba(20,108,67,.15); outline: 0; }
 .empty-state { padding: 3rem; text-align: center; border: 1px dashed #b6c8bd; border-radius: 1rem; }
 a { color: var(--brand); } a:hover { color: #0e4e30; }
 @media (prefers-color-scheme: dark) {
