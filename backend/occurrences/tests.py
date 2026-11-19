@@ -39,7 +39,7 @@ class OccurrenceAppTests(TestCase):
                 "item": self.item.pk,
                 "occurrence_type": Occurrence.Type.RETURN_REQUEST,
                 "location": self.location.pk,
-                "occurred_at": timezone.now().strftime("%Y-%m-%dT%H:%M"),
+                "occurred_at": timezone.localtime(timezone.now()).strftime("%Y-%m-%dT%H:%M"),
                 "notes": "Tenho a identificação do objeto.",
             },
         )

@@ -137,6 +137,7 @@ class DomainModelTests(TestCase):
             category=self.category,
             location=self.location,
             owner=self.user,
+            approved=True,
         )
         self.client.force_login(self.user)
         response = self.client.get(reverse("items:list"), {"q": "Caderno"})
