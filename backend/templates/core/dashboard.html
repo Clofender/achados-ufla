@@ -40,6 +40,23 @@
   </article>
 </section>
 
+<section class="overview-chart{% if not has_chart_data %} is-empty{% endif %}" style="--found-share: {{ found_percent }}%; --lost-end: {{ lost_end_percent }}%;" aria-label="Distribuição dos objetos">
+  <div>
+    <p class="section-kicker">Resumo do catálogo</p>
+    <h2>Distribuição dos registros</h2>
+  </div>
+  <div class="chart-track" aria-hidden="true">
+    <span class="chart-found"></span>
+    <span class="chart-lost"></span>
+    <span class="chart-returned"></span>
+  </div>
+  <div class="chart-legend" aria-label="Legenda">
+    <span><i class="legend-found"></i>Encontrados <strong>{{ found_items }}</strong></span>
+    <span><i class="legend-lost"></i>Perdidos <strong>{{ lost_items }}</strong></span>
+    <span><i class="legend-returned"></i>Devolvidos <strong>{{ returned_items }}</strong></span>
+  </div>
+</section>
+
 <section class="dashboard-grid">
   <div class="dashboard-column">
     <div class="section-heading">
