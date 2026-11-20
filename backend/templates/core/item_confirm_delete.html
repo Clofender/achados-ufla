@@ -1,10 +1,1 @@
-{% extends "base.html" %}
-{% block title %}Excluir objeto | Achados UFLA{% endblock %}
-{% block content %}
-<section class="confirm-card">
-  <p class="eyebrow">CONFIRMAÇÃO</p>
-  <h1>Excluir “{{ object.title }}”?</h1>
-  <p>Esta ação também remove as ocorrências relacionadas ao objeto e não pode ser desfeita.</p>
-  <form method="post" class="confirm-actions">{% csrf_token %}<button class="button button-danger" type="submit">Excluir objeto</button><a class="button button-secondary" href="{% url 'items:detail' object.pk %}">Manter objeto</a></form>
-</section>
-{% endblock %}
+{% extends "base.html" %}{% block content %}<a class="back-link" href="{% url 'items:detail' object.pk %}">Voltar ao objeto</a><div class="detail-layout"><article class="detail-main"><p class="page-overline">Confirmação</p><h1>Excluir {{ object.title }}?</h1><p class="lead">Esta ação também remove as ocorrências relacionadas e não poderá ser desfeita.</p><form method="post">{% csrf_token %}<div class="d-flex gap-2 mt-4"><button class="btn btn-danger">Confirmar exclusão</button><a class="btn btn-secondary" href="{% url 'items:detail' object.pk %}">Cancelar</a></div></form></article></div>{% endblock %}

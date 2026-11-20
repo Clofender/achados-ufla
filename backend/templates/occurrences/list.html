@@ -1,19 +1,2 @@
-{% extends "base.html" %}
-{% block title %}Minhas ocorrências | Achados UFLA{% endblock %}
-{% block content %}
-<header class="page-heading">
-  <div><p class="eyebrow">ACOMPANHAMENTO</p><h1>Minhas ocorrências</h1><p>Acompanhe os registros e solicitações que você enviou.</p></div>
-  <a class="button button-primary" href="{% url 'occurrences:create' %}"><span aria-hidden="true">＋</span> Nova ocorrência</a>
-</header>
-<div class="record-list">
-  {% for occurrence in occurrences %}
-  <a class="record-row" href="{% url 'occurrences:detail' occurrence.pk %}">
-    <span class="stat-icon blue" aria-hidden="true">◷</span>
-    <span class="record-main"><strong>{{ occurrence.get_occurrence_type_display }} · {{ occurrence.item.title }}</strong><small>{{ occurrence.location }} · {{ occurrence.occurred_at|date:"d/m/Y H:i" }}</small></span>
-    <span class="record-side"><span class="status status-{{ occurrence.status|lower }}">{{ occurrence.get_status_display }}</span><span aria-hidden="true">→</span></span>
-  </a>
-  {% empty %}
-  <div class="empty-state"><span class="empty-symbol" aria-hidden="true">◷</span><h2>Nenhuma ocorrência registrada</h2><p>Registre uma perda, um achado ou uma solicitação de devolução para acompanhar aqui.</p><a class="button button-primary button-small" href="{% url 'occurrences:create' %}">Registrar ocorrência</a></div>
-  {% endfor %}
-</div>
-{% endblock %}
+{% extends "base.html" %}{% block title %}Minhas ocorrências | Achados UFLA{% endblock %}
+{% block content %}<div class="page-heading"><div><p class="page-overline">Minha atividade</p><h1>Ocorrências</h1></div><a class="btn btn-primary" href="{% url 'occurrences:create' %}">Registrar ocorrência</a></div><div class="list-panel">{% for occurrence in occurrences %}<a href="{% url 'occurrences:detail' occurrence.pk %}"><span><strong>{{ occurrence.get_occurrence_type_display }} · {{ occurrence.item }}</strong><small class="text-muted">{{ occurrence.occurred_at|date:"d/m/Y H:i" }}</small></span><span class="badge text-bg-light">{{ occurrence.get_status_display }}</span></a>{% empty %}<div class="inline-empty m-3"><strong>Você ainda não registrou ocorrências</strong><span>Use uma ocorrência para informar perda, achado ou devolução.</span></div>{% endfor %}</div>{% endblock %}

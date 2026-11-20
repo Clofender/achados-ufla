@@ -1,10 +1,1 @@
-{% extends "base.html" %}
-{% block title %}Excluir ocorrência | Achados UFLA{% endblock %}
-{% block content %}
-<section class="confirm-card">
-  <p class="eyebrow">CONFIRMAÇÃO</p>
-  <h1>Excluir este registro?</h1>
-  <p>O registro de {{ object.get_occurrence_type_display|lower }} sobre “{{ object.item.title }}” será removido permanentemente.</p>
-  <form method="post" class="confirm-actions">{% csrf_token %}<button class="button button-danger" type="submit">Excluir ocorrência</button><a class="button button-secondary" href="{% url 'occurrences:detail' object.pk %}">Manter registro</a></form>
-</section>
-{% endblock %}
+{% extends "base.html" %}{% block content %}<a class="back-link" href="{% url 'occurrences:detail' object.pk %}">Voltar à ocorrência</a><div class="detail-layout"><article class="detail-main"><p class="page-overline">Confirmação</p><h1>Excluir ocorrência?</h1><p class="lead">Esta ação remove o registro pendente e não poderá ser desfeita.</p><form method="post">{% csrf_token %}<div class="d-flex gap-2 mt-4"><button class="btn btn-danger">Confirmar exclusão</button><a class="btn btn-secondary" href="{% url 'occurrences:detail' object.pk %}">Cancelar</a></div></form></article></div>{% endblock %}

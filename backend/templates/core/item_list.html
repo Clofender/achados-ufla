@@ -1,41 +1,5 @@
-{% extends "base.html" %}
-{% block title %}Explorar objetos | Achados UFLA{% endblock %}
-{% block content %}
-<header class="page-heading">
-  <div><p class="eyebrow">CATÁLOGO DA COMUNIDADE</p><h1>Explore os objetos</h1><p>Pesquise no que foi perdido ou encontrado no campus.</p></div>
-  <a class="button button-primary" href="{% url 'items:create' %}"><span aria-hidden="true">＋</span> Cadastrar objeto</a>
-</header>
-<form class="filter-panel" method="get">
-  <div class="filter-grid">
-    <div class="field field-search"><label for="item-query">Busca</label><input id="item-query" class="filter-control" name="q" value="{{ request.GET.q }}" placeholder="Título, descrição ou característica"></div>
-    <div class="field"><label for="item-status">Status</label><select id="item-status" class="filter-control" name="status"><option value="">Todos</option>{% for value,label in statuses %}<option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
-    <div class="field"><label for="item-category">Categoria</label><select id="item-category" class="filter-control" name="category"><option value="">Todas</option>{% for category in categories %}<option value="{{ category.pk }}" {% if request.GET.category == category.pk|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>{% endfor %}</select></div>
-    <div class="field"><label for="item-location">Local</label><select id="item-location" class="filter-control" name="location"><option value="">Todos</option>{% for location in locations %}<option value="{{ location.pk }}" {% if request.GET.location == location.pk|stringformat:"s" %}selected{% endif %}>{{ location.name }}</option>{% endfor %}</select></div>
-    <div class="field"><label for="item-period">Período</label><select id="item-period" class="filter-control" name="period"><option value="">Qualquer período</option><option value="7" {% if request.GET.period == "7" %}selected{% endif %}>Últimos 7 dias</option><option value="30" {% if request.GET.period == "30" %}selected{% endif %}>Últimos 30 dias</option><option value="365" {% if request.GET.period == "365" %}selected{% endif %}>Último ano</option></select></div>
-  </div>
-  <div class="filter-actions"><button class="button button-primary" type="submit">Aplicar filtros</button><a class="button button-secondary" href="{% url 'items:list' %}">Limpar</a></div>
-</form>
-<p class="result-count"><strong>{{ result_count }}</strong> resultado{{ result_count|pluralize }} encontrado{{ result_count|pluralize }}</p>
-<div class="item-grid">
-  {% for item in items %}
-  <article class="item-card">
-    <a class="item-card-image" href="{% url 'items:detail' item.pk %}" aria-label="Ver {{ item.title }}">{% if item.image %}<img src="{{ item.image.url }}" alt="Foto de {{ item.title }}">{% else %}<span aria-hidden="true">◇</span>{% endif %}</a>
-    <div class="item-card-body">
-      <span class="status status-{{ item.status|lower }}">{{ item.get_status_display }}</span>
-      <h2><a href="{% url 'items:detail' item.pk %}">{{ item.title }}</a></h2>
-      <p>{{ item.description|truncatewords:20 }}</p>
-      <div class="item-card-meta"><span><span aria-hidden="true">⌖</span>{{ item.location }}</span><span>{{ item.category }}</span></div>
-    </div>
-  </article>
-  {% empty %}
-  <div class="empty-state"><span class="empty-symbol" aria-hidden="true">⌕</span><h2>Nenhum objeto encontrado</h2><p>Tente mudar os filtros ou cadastre um novo objeto para a comunidade.</p><a class="button button-primary button-small" href="{% url 'items:create' %}">Cadastrar objeto</a></div>
-  {% endfor %}
-</div>
-{% if is_paginated %}
-<nav class="pagination" aria-label="Paginação">
-  {% if page_obj.has_previous %}<a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Página anterior">←</a>{% endif %}
-  <span class="current">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-  {% if page_obj.has_next %}<a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Próxima página">→</a>{% endif %}
-</nav>
-{% endif %}
-{% endblock %}
+{% extends "base.html" %}{% block title %}Objetos | Achados UFLA{% endblock %}
+{% block content %}<div class="page-heading"><div><p class="page-overline">Catálogo</p><h1>Objetos</h1></div><a class="btn btn-primary" href="{% url 'items:create' %}">Cadastrar objeto</a></div>
+<form class="filter-panel card-body mb-4" method="get" aria-label="Filtros de objetos"><div class="row g-2"><div class="col-lg-4"><label class="visually-hidden" for="item-search">Buscar objetos</label><input id="item-search" class="form-control" name="q" value="{{ request.GET.q }}" placeholder="Buscar objeto"></div><div class="col-md-4 col-lg-2"><select class="form-select" name="status" aria-label="Filtrar por status"><option value="">Todos os status</option>{% for value,label in statuses %}<option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div><div class="col-md-4 col-lg-2"><select class="form-select" name="category" aria-label="Filtrar por categoria"><option value="">Todas as categorias</option>{% for category in categories %}<option value="{{ category.pk }}" {% if request.GET.category == category.pk|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>{% endfor %}</select></div><div class="col-md-4 col-lg-2"><select class="form-select" name="location" aria-label="Filtrar por local"><option value="">Todos os locais</option>{% for location in locations %}<option value="{{ location.pk }}" {% if request.GET.location == location.pk|stringformat:"s" %}selected{% endif %}>{{ location.name }}</option>{% endfor %}</select></div><div class="col-md-6 col-lg-2"><select class="form-select" name="period" aria-label="Filtrar por período"><option value="">Qualquer período</option><option value="7" {% if request.GET.period == "7" %}selected{% endif %}>Últimos 7 dias</option><option value="30" {% if request.GET.period == "30" %}selected{% endif %}>Últimos 30 dias</option><option value="365" {% if request.GET.period == "365" %}selected{% endif %}>Último ano</option></select></div><div class="col-12 d-flex gap-2"><button class="btn btn-primary">Aplicar filtros</button><a class="btn btn-secondary" href="{% url 'items:list' %}">Limpar</a></div></div></form>
+<p class="text-muted mb-3">{{ result_count }} resultado{{ result_count|pluralize }}</p><div class="object-grid">{% for item in items %}<a class="object-card" href="{% url 'items:detail' item.pk %}"><span class="badge text-bg-light align-self-start">{{ item.get_status_display }}</span><h2>{{ item.title }}</h2><p>{{ item.description|truncatewords:18 }}</p><small class="object-card-meta">{{ item.location }} · {{ item.category }}</small></a>{% empty %}<div class="empty-state w-100"><h2>Nenhum objeto encontrado</h2><p>Remova filtros ou cadastre um novo objeto.</p><a class="btn btn-primary" href="{% url 'items:create' %}">Cadastrar objeto</a></div>{% endfor %}</div>
+{% if is_paginated %}<nav class="mt-4"><ul class="pagination">{% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}">Anterior</a></li>{% endif %}<li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>{% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}">Próxima</a></li>{% endif %}</ul></nav>{% endif %}{% endblock %}

@@ -182,3 +182,12 @@ class DomainModelTests(TestCase):
         response = self.client.get(reverse("items:list"), {"q": "Caderno"})
         self.assertContains(response, "Caderno verde")
         self.assertNotContains(response, "Notebook")
+
+    def test_dashboard_requires_login_and_renders_real_totals(self):
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 302)
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Olá")
+        self.assertContains(response, "Objetos públicos")

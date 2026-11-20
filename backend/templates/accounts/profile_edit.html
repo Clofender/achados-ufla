@@ -1,17 +1,2 @@
-{% extends "base.html" %}
-{% block title %}Editar perfil | Achados UFLA{% endblock %}
-{% block content %}
-<header class="page-heading">
-  <div><p class="eyebrow">SUA CONTA</p><h1>Editar perfil</h1><p>Mantenha suas informações atualizadas.</p></div>
-  <a class="button button-secondary" href="{% url 'accounts_profile' %}">Voltar ao perfil</a>
-</header>
-<section class="form-layout">
-  <div class="form-card">
-    <form method="post">
-      {% csrf_token %}
-      <div class="form-grid">{% include "_form_fields.html" %}</div>
-      <div class="form-actions"><button class="button button-primary" type="submit">Salvar alterações</button><a class="button button-secondary" href="{% url 'accounts_profile' %}">Cancelar</a></div>
-    </form>
-  </div>
-</section>
-{% endblock %}
+{% extends "base.html" %}{% block title %}Editar perfil | Achados UFLA{% endblock %}
+{% block content %}<a class="back-link" href="{% url 'accounts_profile' %}">Voltar ao perfil</a><div class="page-heading"><div><p class="page-overline">Conta</p><h1>Editar perfil</h1></div></div><div class="detail-layout"><article class="detail-main"><form method="post">{% csrf_token %}{{ form.as_p }}<div class="d-flex gap-2 mt-4"><button class="btn btn-primary">Salvar alterações</button><a class="btn btn-secondary" href="{% url 'accounts_profile' %}">Cancelar</a></div></form></article></div>{% endblock %}

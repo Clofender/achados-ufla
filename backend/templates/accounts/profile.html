@@ -1,29 +1,3 @@
-{% extends "base.html" %}
-{% block title %}Meu perfil | Achados UFLA{% endblock %}
-{% block content %}
-<header class="page-heading">
-  <div><p class="eyebrow">SUA CONTA</p><h1>Meu perfil</h1><p>Confira seus dados de contato e informações acadêmicas.</p></div>
-  <a class="button button-secondary" href="{% url 'accounts_profile_edit' %}">Editar perfil</a>
-</header>
-<section class="detail-layout">
-  <article class="detail-card">
-    <div class="profile-summary">
-      <span class="avatar profile-avatar">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
-      <div><p class="panel-kicker">PERFIL UFLA</p><h2>{{ user.get_full_name|default:user.username }}</h2><span class="status status-found">{{ profile.get_role_display }}</span></div>
-    </div>
-    <dl class="profile-facts">
-      <div><dt>Nome completo</dt><dd>{{ user.get_full_name|default:"Não informado" }}</dd></div>
-      <div><dt>Nome de usuário</dt><dd>{{ user.username }}</dd></div>
-      <div><dt>E-mail</dt><dd>{{ user.email|default:"Não informado" }}</dd></div>
-      <div><dt>Matrícula</dt><dd>{{ profile.campus_id|default:"Não informada" }}</dd></div>
-      <div><dt>Telefone</dt><dd>{{ profile.phone|default:"Não informado" }}</dd></div>
-    </dl>
-  </article>
-  <aside class="detail-aside">
-    <p class="panel-kicker">SEU ESPAÇO</p><h2>Seus registros, sempre por perto.</h2>
-    <p>Atualize seus dados para que a comunidade possa entrar em contato quando necessário.</p>
-    <a class="button button-primary" href="{% url 'accounts_profile_edit' %}">Atualizar informações</a>
-    <a class="button button-secondary" href="{% url 'items:mine' %}">Ver meus objetos</a>
-  </aside>
-</section>
-{% endblock %}
+{% extends "base.html" %}{% block title %}Meu perfil | Achados UFLA{% endblock %}
+{% block content %}<div class="page-heading"><div><p class="page-overline">Conta</p><h1>Meu perfil</h1></div><a class="btn btn-secondary" href="{% url 'accounts_profile_edit' %}">Editar perfil</a></div>
+<div class="detail-layout"><article class="detail-main"><dl class="detail-facts"><div class="detail-fact"><dt>Nome</dt><dd>{{ user.get_full_name|default:user.username }}</dd></div><div class="detail-fact"><dt>E-mail</dt><dd>{{ user.email|default:"Não informado" }}</dd></div><div class="detail-fact"><dt>Matrícula</dt><dd>{{ profile.campus_id|default:"Não informada" }}</dd></div><div class="detail-fact"><dt>Telefone</dt><dd>{{ profile.phone|default:"Não informado" }}</dd></div></dl></article></div>{% endblock %}
