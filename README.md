@@ -97,15 +97,38 @@ O superusuário pode administrar todos os modelos. Outros usuários precisam ter
 
 ### Dados de demonstração
 
-O comando cria contas locais, categorias, locais, objetos e ocorrências:
+O comando cria contas locais, 10 categorias, 14 locais, cerca de 39 objetos e
+22 ocorrências distribuídas pelos estados do sistema:
 
 ```powershell
 .\.venv\Scripts\python.exe backend/manage.py seed_demo
 ```
 
-As contas `demo_aluno`, `demo_moderador` e `demo_admin` usam a senha local
-`Demo12345!`. Para usar um usuário existente como proprietário, informe
-`--username seu_usuario`. Nunca use as credenciais de demonstração em produção.
+As contas demonstrativas usam a senha local `Demo12345!`:
+
+| Conta | Perfil | Uso |
+| --- | --- | --- |
+| `demo_aluno` | Estudante | Cadastra objetos e cria ocorrências |
+| `demo_aluno2` | Estudante | Testa registros de outro usuário |
+| `demo_aluno3` | Estudante | Testa registros de outro usuário |
+| `demo_aluno4` | Estudante | Testa registros de outro usuário |
+| `demo_moderador` | Moderador | Aprova e rejeita solicitações |
+| `demo_moderador2` | Moderador | Testa validação compartilhada |
+| `demo_admin` | Administrador | Controle total no Django Admin |
+
+Use `--reset` para apagar apenas registros de demonstração e recriar o conjunto
+completo. Nunca use essas credenciais em produção.
+
+## Links locais
+
+| Interface | Endereço |
+| --- | --- |
+| Dashboard do usuário | `http://127.0.0.1:8000/` |
+| Login público | `http://127.0.0.1:8000/accounts/login/` |
+| Cadastro público | `http://127.0.0.1:8000/accounts/register/` |
+| Perfil do usuário | `http://127.0.0.1:8000/accounts/profile/` |
+| Administração Django | `http://127.0.0.1:8000/admin/` |
+| Frontend React/Vite | `http://127.0.0.1:5173/` |
 
 ## Permissões, segurança e fluxo de demonstração
 
